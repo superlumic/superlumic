@@ -95,9 +95,12 @@ if [[ "$command" == "setup" ]]; then
     sudo chown -R $USER:admin /opt/superlumic
     sudo chmod -R 755 /opt/superlumic
 
-    curl -s -o /opt/superlumic/requirements/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
-    ansible-galaxy install -f -r /opt/superlumic/requirements/setup.yml -p /opt/superlumic/roles
-    curl -s -o /opt/superlumic/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml    fi
+    cd /opt/superlumic
 
-    ansible-playbook -i 'localhost,' /opt/superlumic/setup.yml --ask-become-pass
+    curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/master/ansible.cfg
+    curl -s -o requirements/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/requirements/setup.yml
+    ansible-galaxy install -f -r requirements/setup.yml -p roles
+    curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup.yml
+
+    ansible-playbook -i 'localhost,' setup.yml --ask-become-pass
 fi
