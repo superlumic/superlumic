@@ -85,4 +85,13 @@ if [[ "$command" == "setup" ]]; then
         sudo pip install ansible
     fi
 
+    if [[ ! -d "/opt/superlumic/roles" ]]; then
+        mkdir -p /opt/superlumic/roles
+    fi
+
+    if [[ ! -f "/opt/superlumic/setup-requirements.yml" ]]; then
+        curl -o /opt/superlumic/setup-requirements.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
+    fi
+
+    ansible-galaxy install -r /opt/superlumic/setup-requirements.yml -p /opt/superlumic/roles
 fi
