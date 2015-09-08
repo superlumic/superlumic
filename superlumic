@@ -5,6 +5,16 @@ function triggerError {
     exit 1
 }
 
+# Check whether a command exists - returns 0 if it does, 1 if it does not
+function exists {
+  if command -v $1 >/dev/null 2>&1
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # credits https://github.com/boxcutter/osx/blob/master/script/xcode-cli-tools.sh
 function install_clt {
     # Get and install Xcode CLI tools
@@ -68,9 +78,11 @@ if [[ "$command" == "setup" ]]; then
     fi
 
     # Install Ansible
-    sudo easy_install pip
-    sudo pip install ansible
-
-
+    if ! exists pip; then
+        sudo easy_install pip
+    fi
+    if ! exists ansible; then
+        sudo pip install ansible
+    fi
 
 fi
