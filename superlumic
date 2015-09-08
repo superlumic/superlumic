@@ -69,6 +69,8 @@ if [[ ! ${allowed_commands[*]} =~ "$command" ]]; then
     fi
 fi
 
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
 # The command is setup, so setup beep
 if [[ "$command" == "setup" ]]; then
 
