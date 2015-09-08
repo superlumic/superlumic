@@ -16,11 +16,15 @@ command=$1
 # Check if beep has been called correctly
 allowed_commands=("setup" "provision")
 if [[ ! ${allowed_commands[*]} =~ "$command" ]]; then
-    triggerError "Usage: ./superlumic [setup|provision], not $command"
+    if [ -z "$command" ]; then
+        triggerError "Usage: ./superlumic [setup|provision]"
+    else
+        triggerError "Usage: ./superlumic [setup|provision], not $command"
+    fi
 fi
 
 # The command is setup, so setup beep
-if [ "$command" = "setup"]; then
+if [[ "$command" == "setup" ]]; then
 
     # Install Ansible
     sudo easy_install pip
