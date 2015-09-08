@@ -91,9 +91,9 @@ if [[ "$command" == "setup" ]]; then
         sudo chmod -R 755 /opt/superlumic
     fi
 
-    if [[ ! -f "/opt/superlumic/setup-requirements.yml" ]]; then
-        curl -o /opt/superlumic/setup-requirements.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
-    fi
-
+    curl -o /opt/superlumic/setup-requirements.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
     ansible-galaxy install -f -r /opt/superlumic/setup-requirements.yml -p /opt/superlumic/roles
+    curl -o /opt/superlumic/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml    fi
+
+    ansible-playbook /opt/superlumic/setup.yml --ask-become-pass
 fi
