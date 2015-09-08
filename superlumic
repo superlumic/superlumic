@@ -95,5 +95,5 @@ if [[ "$command" == "setup" ]]; then
         curl -o /opt/superlumic/setup-requirements.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
     fi
 
-    ansible-galaxy install -r /opt/superlumic/setup-requirements.yml -p /opt/superlumic/roles --force
+    ansible-galaxy install -f -r /opt/superlumic/setup-requirements.yml -p /opt/superlumic/roles
 fi
