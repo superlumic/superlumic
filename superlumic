@@ -77,8 +77,8 @@ fi
 
 sudo mkdir -p /usr/local/superlumic
 sudo mkdir -p /usr/local/superlumic/roles
-sudo chmod g+rwx /usr/local
-sudo chgrp admin /usr/local
+sudo chmod -R g+rwx /usr/local
+sudo chgrp -R admin /usr/local
 
 if [ -d "/usr/local/superlumic/config" ]; then
     cd /usr/local/superlumic/config
