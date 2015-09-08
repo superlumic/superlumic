@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+repo=$1
+
+
 function triggerError {
     echo -e "\033[31m$1\033[0m" 1>&2
     exit 1
@@ -57,52 +60,54 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-command=$1
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
-# Check if beep has been called correctly
-allowed_commands=("setup" "provision")
-if [[ ! ${allowed_commands[*]} =~ "$command" ]]; then
-    if [ -z "$command" ]; then
-        triggerError "Usage: ./superlumic [setup|provision]"
+# Install the CLT
+if [[ ! -f "/Library/Developer/CommandLineTools/usr/bin/clang" ]]; then
+    install_clt
+fi
+
+# Install Ansible
+if ! exists pip; then
+    sudo easy_install pip
+fi
+if ! exists ansible; then
+    sudo pip install ansible
+fi
+
+sudo mkdir -p /usr/local/superlumic
+sudo mkdir -p /usr/local/superlumic/roles
+sudo chmod g+rwx /usr/local
+sudo chgrp admin /usr/local
+
+if [ -d "/usr/local/superlumic/config" ]; then
+    cd /usr/local/superlumic/config
+    git pull
+else
+    if [ ! -z "$repo" ]; then
+        git clone $1 /usr/local/superlumic/config
     else
-        triggerError "Usage: ./superlumic [setup|provision], not $command"
+        git clone https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
+        cd /usr/local/superlumic/config/
+        rm -Rf .git
+        git init
+        git add .
+        git commit -a -m "Inital Superlumic configuration"
     fi
 fi
 
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+cd /usr/local/superlumic
 
-# The command is setup, so setup beep
-if [[ "$command" == "setup" ]]; then
+curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/master/ansible.cfg
+ansible-galaxy install -f -r config/requirements.yml -p roles
+curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup.yml
 
-    # Install the CLT
-    if [[ ! -f "/Library/Developer/CommandLineTools/usr/bin/clang" ]]; then
-        install_clt
-    fi
+ansible-playbook -i 'localhost,' setup.yml
 
-    # Install Ansible
-    if ! exists pip; then
-        sudo easy_install pip
-    fi
-    if ! exists ansible; then
-        sudo pip install ansible
-    fi
+if [ -f "config/default.yml" ]; then
+    ansible-playbook -i 'localhost,' config/default.yml
+fi
 
-    if [[ ! -d "/opt/superlumic/roles" ]]; then
-        sudo mkdir -p /opt/superlumic/roles
-    fi
-    if [[ ! -d "/opt/superlumic/requirements" ]]; then
-        sudo mkdir -p /opt/superlumic/requirements
-    fi
-
-    sudo chown -R $USER:admin /opt/superlumic
-    sudo chmod -R 755 /opt/superlumic
-
-    cd /opt/superlumic
-
-    curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/master/ansible.cfg
-    curl -s -o requirements/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/requirements/setup.yml
-    ansible-galaxy install -f -r requirements/setup.yml -p roles
-    curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup.yml
-
-    ansible-playbook -i 'localhost,' setup.yml --ask-become-pass
+if [ -f "config/$USER.yml" ]; then
+    ansible-playbook -i 'localhost,' config/$USER.yml
 fi
