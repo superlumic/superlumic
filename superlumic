@@ -87,12 +87,16 @@ if [[ "$command" == "setup" ]]; then
 
     if [[ ! -d "/opt/superlumic/roles" ]]; then
         sudo mkdir -p /opt/superlumic/roles
-        sudo chown -R $USER:admin /opt/superlumic
-        sudo chmod -R 755 /opt/superlumic
+    fi
+    if [[ ! -d "/opt/superlumic/requirements" ]]; then
+        sudo mkdir -p /opt/superlumic/requirements
     fi
 
-    curl -s -o /opt/superlumic/setup-requirements.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
-    ansible-galaxy install -f -r /opt/superlumic/setup-requirements.yml -p /opt/superlumic/roles
+    sudo chown -R $USER:admin /opt/superlumic
+    sudo chmod -R 755 /opt/superlumic
+
+    curl -s -o /opt/superlumic/requirements/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml
+    ansible-galaxy install -f -r /opt/superlumic/requirements/setup.yml -p /opt/superlumic/roles
     curl -s -o /opt/superlumic/setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup-requirements.yml    fi
 
     ansible-playbook -i 'localhost,' /opt/superlumic/setup.yml --ask-become-pass
