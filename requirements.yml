@@ -1,0 +1,4 @@
+---
+
+- src: https://github.com/superlumic/ansible-role-homebrew.git
+  name: homebrew
