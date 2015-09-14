@@ -104,5 +104,5 @@ curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/mas
 ansible-playbook -i 'localhost,' setup.yml
 
 if [ -f "config/$USER.yml" ]; then
-    ansible-playbook -vvv -i 'localhost,' config/$USER.yml
+    ansible-playbook -i 'localhost,' config/$USER.yml
 fi
