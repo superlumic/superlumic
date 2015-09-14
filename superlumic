@@ -88,10 +88,10 @@ else
     else
         git clone https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
         cd /usr/local/superlumic/config/
-        rm -Rf .git
-        git init
-        git add .
-        git commit -a -m "Inital Superlumic configuration"
+ #       rm -Rf .git
+ #       git init
+ #       git add .
+ #       git commit -a -m "Inital Superlumic configuration"
     fi
 fi
 
