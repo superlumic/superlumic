@@ -103,10 +103,6 @@ curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/mas
 
 ansible-playbook -i 'localhost,' setup.yml
 
-if [ -f "config/default.yml" ]; then
-    ansible-playbook -i 'localhost,' config/default.yml
-fi
-
 if [ -f "config/$USER.yml" ]; then
     ansible-playbook -i 'localhost,' config/$USER.yml
 fi
