@@ -101,10 +101,10 @@ curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/m
 ansible-galaxy install -f -r config/requirements.yml -p roles
 curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup.yml
 
-read -s  -p Password: pwd
+read -s -p "Password: " password; echo
 
-ansible-playbook -i "localhost ansible_become_pass=$pwd," setup.yml
+ansible-playbook -i "localhost ansible_become_pass=$password," setup.yml
 
 if [ -f "config/$USER.yml" ]; then
-    ansible-playbook -i "localhost ansible_become_pass=$pwd," config/$USER.yml
+    ansible-playbook -i "localhost ansible_become_pass=$password," config/$USER.yml
 fi
