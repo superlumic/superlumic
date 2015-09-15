@@ -96,8 +96,8 @@ curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/m
 ansible-galaxy install -f -r config/requirements.yml -p roles
 curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup.yml
 
-sudo ansible-playbook -i "localhost," setup.yml
+sudo ansible-playbook -vvv -i "localhost," setup.yml
 
 if [ -f "config/$USER.yml" ]; then
-    sudo ansible-playbook -i "localhost," config/$USER.yml
+    sudo ansible-playbook -vvv -i "localhost," config/$USER.yml
 fi
