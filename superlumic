@@ -54,12 +54,10 @@ function install_clt {
 }
 
 # Ask for the administrator password upfront
-sudo -v -p "sudo password to setup superlumic: "
+sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
-read -s -p "sudo password to run ansible: " password; echo
 
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
@@ -89,11 +87,6 @@ else
         git clone $1 /usr/local/superlumic/config
     else
         git clone https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
-        cd /usr/local/superlumic/config/
- #       rm -Rf .git
- #       git init
- #       git add .
- #       git commit -a -m "Inital Superlumic configuration"
     fi
 fi
 
@@ -103,8 +96,8 @@ curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/m
 ansible-galaxy install -f -r config/requirements.yml -p roles
 curl -s -o setup.yml https://raw.githubusercontent.com/superlumic/superlumic/master/setup.yml
 
-ansible-playbook -i "localhost ansible_become_pass=$password," setup.yml
+ansible-playbook -K -i "localhost," setup.yml
 
 if [ -f "config/$USER.yml" ]; then
-    ansible-playbook -i "localhost ansible_become_pass=$password," config/$USER.yml
+    ansible-playbook -K -i "localhost," config/$USER.yml
 fi
