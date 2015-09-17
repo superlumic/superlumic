@@ -9,5 +9,5 @@ While the Kitchenplan wrapper uses a Ruby gem and quite some code, I will try to
 ## Installation
 
 ```
-curl -s https://raw.githubusercontent.com/superlumic/superlumic/master/superlumic -o /tmp/superlumic && chmod a+x /tmp/superlumic && /tmp/superlumic; rm -f /tmp/superlumic
+curl -s https://raw.githubusercontent.com/superlumic/superlumic/master/superlumic | bash -s
 ```
