@@ -4,6 +4,10 @@ BGreen='\e[1;32m'       # Green
 IRed='\e[0;91m'         # Red
 Color_Off='\e[0m'       # Text Reset
 
+function setStatusMessage {
+    printf "${IRed} --> ${BGreen}$1${Color_Off}\n" 1>&2
+}
+
 printf "${BGreen}   _________                         .__                .__        ${Color_Off}\n"
 printf "${BGreen}  /   _____/__ ________   ___________|  |  __ __  _____ |__| ____  ${Color_Off}\n"
 printf "${BGreen}  \_____  \|  |  \____ \_/ __ \_  __ \  | |  |  \/     \|  |/ ___\ ${Color_Off}\n"
@@ -25,10 +29,6 @@ repo=$1
 function triggerError {
     printf "${IRed}$1${Color_Off}\n" 1>&2
     exit 1
-}
-
-function setStatusMessage {
-    printf "${IRed} --> ${BGreen}$1${Color_Off}\n" 1>&2
 }
 
 # Check whether a command exists - returns 0 if it does, 1 if it does not
@@ -90,12 +90,12 @@ fi
 
 # Install Ansible
 if ! exists pip; then
-    setStatusMessage "Install the PIP"
-    sudo easy_install pip
+    setStatusMessage "Install PIP"
+    sudo easy_install --quiet pip
 fi
 if ! exists ansible; then
-    setStatusMessage "Install the Ansible"
-    sudo pip install ansible
+    setStatusMessage "Install Ansible"
+    sudo pip install -q ansible
 fi
 
 setStatusMessage "Create necessary folders"
@@ -108,14 +108,14 @@ sudo chgrp -R admin /usr/local
 if [ -d "/usr/local/superlumic/config" ]; then
     setStatusMessage "Update your config from git"
     cd /usr/local/superlumic/config
-    git -q pull
+    git pull -q
 else
     if [ ! -z "$repo" ]; then
         setStatusMessage "Getting your config from your fork"
-        git -q clone $1 /usr/local/superlumic/config
+        git clone -q $1 /usr/local/superlumic/config
     else
         setStatusMessage "Getting the default config"
-        git -q clone https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
+        git clone -q https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
     fi
 fi
 
