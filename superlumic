@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 BGreen='\e[1;32m'       # Green
 BRed='\e[1;31m'         # Red
@@ -77,7 +77,7 @@ function install_clt {
     fi
 }
 
-setStatusMessage "Keep-alive: update existing `sudo` time stamp until we are finished"
+setStatusMessage "Keep-alive: update existing sudo time stamp until we are finished"
 
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
