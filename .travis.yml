@@ -6,8 +6,5 @@ os:
 
 osx_image: xcode7
 
-install:
-  - ln -sf roderik.yml travis.yml
-
 script:
   - ./superlumic

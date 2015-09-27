@@ -133,5 +133,10 @@ if [ -f "config/$USER.yml" ]; then
     setStatusMessage "Running the ansible playbook for $USER"
     ansible-playbook -i "localhost," config/$USER.yml
 else
-    triggerError "No playbook for $USER found"
+    if [ "travis" = "$USER" ]; then
+        setStatusMessage "Running the ansible playbook for $USER but use roderik.yml as fallback"
+        ansible-playbook -i "localhost," config/roderik.yml
+    else
+        triggerError "No playbook for $USER found"
+    fi
 fi
