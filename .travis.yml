@@ -1,0 +1,10 @@
+---
+language: objective-c
+
+os:
+  - osx
+
+osx_image: xcode7
+
+script:
+  - cat superlumic | bash -s

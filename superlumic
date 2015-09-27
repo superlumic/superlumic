@@ -1,9 +1,27 @@
-#!/bin/bash -x
+#!/bin/bash
+
+IGreen='\e[0;92m'       # Green
+IRed='\e[0;91m'         # Red
+Color_Off='\e[0m'       # Text Reset
+
+echo -e "${IGreen}   _________                         .__                .__        ${Color_Off}"
+echo -e "${IGreen}  /   _____/__ ________   ___________|  |  __ __  _____ |__| ____  ${Color_Off}"
+echo -e "${IGreen}  \_____  \|  |  \____ \_/ __ \_  __ \  | |  |  \/     \|  |/ ___\ ${Color_Off}"
+echo -e "${IGreen}  /        \  |  /  |_> >  ___/|  | \/  |_|  |  /  Y Y  \  \  \___ ${Color_Off}"
+echo -e "${IGreen} /_______  /____/|   __/ \___  >__|  |____/____/|__|_|  /__|\___  >${Color_Off}"
+echo -e "${IGreen}         \/      |__|        \/ http://superlumic.com \/        \/ ${Color_Off}"
+
+if sudo -n true; then
+    export ANSIBLE_ASK_SUDO_PASS=False
+else
+    sudo -v
+    export ANSIBLE_ASK_SUDO_PASS=True
+fi
 
 repo=$1
 
 function triggerError {
-    echo -e "\033[31m$1\033[0m" 1>&2
+    echo -e "${IRed}$1${Color_Off}" 1>&2
     exit 1
 }
 
@@ -53,9 +71,6 @@ function install_clt {
     fi
 }
 
-# Ask for the administrator password upfront
-sudo -v
-
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
@@ -92,9 +107,9 @@ fi
 
 cd /usr/local/superlumic
 
-curl -s -o ansible.cfg https://raw.githubusercontent.com/superlumic/superlumic/master/ansible.cfg
+{ echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; } > ansible.cfg
 ansible-galaxy install -f -r config/requirements.yml -p roles
 
 if [ -f "config/$USER.yml" ]; then
-    ansible-playbook -K -i "localhost," config/$USER.yml
+    ansible-playbook -i "localhost," config/$USER.yml
 fi
