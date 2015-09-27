@@ -1,15 +1,17 @@
 #!/bin/bash
 
-IGreen='\e[0;92m'       # Green
+BGreen='\e[1;32m'       # Green
 IRed='\e[0;91m'         # Red
 Color_Off='\e[0m'       # Text Reset
 
-echo -e "${IGreen}   _________                         .__                .__        ${Color_Off}"
-echo -e "${IGreen}  /   _____/__ ________   ___________|  |  __ __  _____ |__| ____  ${Color_Off}"
-echo -e "${IGreen}  \_____  \|  |  \____ \_/ __ \_  __ \  | |  |  \/     \|  |/ ___\ ${Color_Off}"
-echo -e "${IGreen}  /        \  |  /  |_> >  ___/|  | \/  |_|  |  /  Y Y  \  \  \___ ${Color_Off}"
-echo -e "${IGreen} /_______  /____/|   __/ \___  >__|  |____/____/|__|_|  /__|\___  >${Color_Off}"
-echo -e "${IGreen}         \/      |__|        \/ http://superlumic.com \/        \/ ${Color_Off}"
+printf "${BGreen}   _________                         .__                .__        ${Color_Off}\n"
+printf "${BGreen}  /   _____/__ ________   ___________|  |  __ __  _____ |__| ____  ${Color_Off}\n"
+printf "${BGreen}  \_____  \|  |  \____ \_/ __ \_  __ \  | |  |  \/     \|  |/ ___\ ${Color_Off}\n"
+printf "${BGreen}  /        \  |  /  |_> >  ___/|  | \/  |_|  |  /  Y Y  \  \  \___ ${Color_Off}\n"
+printf "${BGreen} /_______  /____/|   __/ \___  >__|  |____/____/|__|_|  /__|\___  >${Color_Off}\n"
+printf "${BGreen}         \/      |__|        \/ http://superlumic.com \/        \/ ${Color_Off}\n\n"
+
+setStatusMessage "Checking if we need to ask for a sudo password"
 
 if sudo -n true; then
     export ANSIBLE_ASK_SUDO_PASS=False
@@ -21,8 +23,12 @@ fi
 repo=$1
 
 function triggerError {
-    echo -e "${IRed}$1${Color_Off}" 1>&2
+    printf "${IRed}$1${Color_Off}\n" 1>&2
     exit 1
+}
+
+function setStatusMessage {
+    printf "${IRed} --> ${BGreen}$1${Color_Off}\n" 1>&2
 }
 
 # Check whether a command exists - returns 0 if it does, 1 if it does not
@@ -71,23 +77,28 @@ function install_clt {
     fi
 }
 
-# Keep-alive: update existing `sudo` time stamp until `.osx` has finished
+setStatusMessage "Keep-alive: update existing `sudo` time stamp until we are finished"
+
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
-# Install the CLT
 if [[ ! -f "/Library/Developer/CommandLineTools/usr/bin/clang" ]]; then
+    setStatusMessage "Install the CLT"
     install_clt
 fi
 
 # Install Ansible
 if ! exists pip; then
+    setStatusMessage "Install the PIP"
     sudo easy_install pip
 fi
 if ! exists ansible; then
+    setStatusMessage "Install the Ansible"
     sudo pip install ansible
 fi
+
+setStatusMessage "Create necessary folders"
 
 sudo mkdir -p /usr/local/superlumic
 sudo mkdir -p /usr/local/superlumic/roles
@@ -95,21 +106,32 @@ sudo chmod -R g+rwx /usr/local
 sudo chgrp -R admin /usr/local
 
 if [ -d "/usr/local/superlumic/config" ]; then
+    setStatusMessage "Update your config from git"
     cd /usr/local/superlumic/config
-    git pull
+    git -q pull
 else
     if [ ! -z "$repo" ]; then
-        git clone $1 /usr/local/superlumic/config
+        setStatusMessage "Getting your config from your fork"
+        git -q clone $1 /usr/local/superlumic/config
     else
-        git clone https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
+        setStatusMessage "Getting the default config"
+        git -q clone https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
     fi
 fi
 
 cd /usr/local/superlumic
 
+setStatusMessage "Create ansible.cfg"
+
 { echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; } > ansible.cfg
+
+setStatusMessage "Get all the required roles"
+
 ansible-galaxy install -f -r config/requirements.yml -p roles
 
 if [ -f "config/$USER.yml" ]; then
+    setStatusMessage "Running the ansible playbook for $USER"
     ansible-playbook -i "localhost," config/$USER.yml
+else
+    triggerError "No playbook for $USER found"
 fi
