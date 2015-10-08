@@ -27,7 +27,7 @@ Or if you have an adversion to piping scripts over the internet into bash, downl
 Starting from "roderik.yml" this will get you:
 
 * All my favorite GUI apps installed via Homebrew Cask
-* All my favorite commandline apps installes via Homebrew
+* All my favorite commandline apps installed via Homebrew
 * A fully operational PHP 5.5 installation with composer, optimised for running Symfony
 * A MySQL and Postgresql database
 * A configured Sublime Text 3
