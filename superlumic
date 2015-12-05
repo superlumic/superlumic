@@ -21,6 +21,10 @@ sudo -v
 export ANSIBLE_ASK_SUDO_PASS=True
 
 repo=$1
+username=$USER
+if [ ! -z "$2" ]; then
+    username=$2
+fi
 
 function triggerError {
     printf "${BRed} --> $1 ${Color_Off}\n" 1>&2
@@ -125,14 +129,14 @@ setStatusMessage "Get all the required roles"
 
 ansible-galaxy install -f -r config/requirements.yml -p roles
 
-if [ -f "config/$USER.yml" ]; then
-    setStatusMessage "Running the ansible playbook for $USER"
-    ansible-playbook -i "localhost," config/$USER.yml
+if [ -f "config/$username.yml" ]; then
+    setStatusMessage "Running the ansible playbook for $username"
+    ansible-playbook -i "localhost," config/$username.yml
 else
-    if [ "travis" = "$USER" ]; then
-        setStatusMessage "Running the ansible playbook for $USER but use roderik.yml as fallback"
+    if [ "travis" = "$username" ]; then
+        setStatusMessage "Running the ansible playbook for $username but use roderik.yml as fallback"
         ansible-playbook -i "localhost," config/roderik.yml
     else
-        triggerError "No playbook for $USER found"
+        triggerError "No playbook for $username found"
     fi
 fi
