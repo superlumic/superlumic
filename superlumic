@@ -21,10 +21,7 @@ sudo -v
 export ANSIBLE_ASK_SUDO_PASS=True
 
 repo=$1
-username=$USER
-if [ ! -z "$2" ]; then
-    username=$2
-fi
+username=${2-default}
 
 function triggerError {
     printf "${BRed} --> $1 ${Color_Off}\n" 1>&2
