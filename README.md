@@ -10,21 +10,29 @@ While the Kitchenplan wrapper uses a Ruby gem and quite some code, I kept Superl
 
 Start by forking [superlumic-config](https://github.com/superlumic/superlumic-config). This is the default configuration "role" for Superlumic and will serve as a starting point for your own configuration.
 
-You will need at least a "username.yml" playbook, where you replace "username" by the username you will run Superlumic as on your mac. Use the roles folder to create "profiles" and add extra dependencies in the "requirements.yml" as needed.
+You will need at least a "default.yml" playbook. Use the roles folder to create "profiles" and add extra dependencies in the "requirements.yml" as needed.
 
-How you organise your config files is entirely up to you, but this is how I do it. The "profile-all" role are the apps and settings that everyone in my company needs. Then I have a group file per type of installation (developers, designers, etc). In the "username.yml" playbook I then add all the specific things for that user.
+How you organise your config files is entirely up to you, but this is how I do it. The "profile-all" role are the apps and settings that everyone in my company needs. Then I have a group file per type of installation (developers, designers, etc). You can then create a "username.yml" playbook to add all the specific things for a specific user.
 
 ## Running Superlumic
 
-```
+```bash
 curl -s https://raw.githubusercontent.com/superlumic/superlumic/master/superlumic | bash -s <your repo clone url here>
 ```
 
 Or if you have an adversion to piping scripts over the internet into bash, download the [Superlumic script](https://raw.githubusercontent.com/superlumic/superlumic/master/superlumic) and run it.
 
+**Note:** Superlumic takes in an additional, optional, argument that determines the name of the playbook to use. When no argument is supplied, "default.yml" will be used. However, if you ran the script thusly:
+
+```bash
+curl -s https://raw.githubusercontent.com/superlumic/superlumic/master/superlumic | bash -s <your repo clone url here> roderik
+```
+
+Then "roderik.yml" will be used.
+
 ## Out of the box result?
 
-Starting from "roderik.yml" this will get you:
+Starting from "default.yml" this will get you:
 
 * All my favorite GUI apps installed via Homebrew Cask
 * All my favorite commandline apps installed via Homebrew
