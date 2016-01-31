@@ -112,7 +112,7 @@ if [ -d "/usr/local/superlumic/config" ]; then
 else
     if [ ! -z "$repo" ]; then
         setStatusMessage "Getting your config from your fork"
-        git clone -q $1 /usr/local/superlumic/config
+        git clone -q $repo /usr/local/superlumic/config
     else
         setStatusMessage "Getting the default config"
         git clone -q https://github.com/superlumic/superlumic-config.git /usr/local/superlumic/config
