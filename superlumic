@@ -128,7 +128,7 @@ ansible-galaxy install -f -r config/requirements.yml -p roles
 
 if [ -f "config/$username.yml" ]; then
     setStatusMessage "Running the ansible playbook for $username"
-    ansible-playbook -i "localhost," config/$username.yml
+    ansible-playbook -i "localhost," --ask-sudo-pass config/$username.yml
 else
     triggerError "No playbook for $username found"
 fi
