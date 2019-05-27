@@ -124,7 +124,7 @@ cd /usr/local/superlumic
 
 setStatusMessage "Create ansible.cfg"
 
-{ echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; } > ansible.cfg
+{ echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; echo 'deprecation_warnings=False';} > ansible.cfg
 
 setStatusMessage "Get all the required roles"
 
