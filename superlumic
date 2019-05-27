@@ -103,8 +103,8 @@ setStatusMessage "Create necessary folders"
 
 sudo mkdir -p /usr/local/superlumic
 sudo mkdir -p /usr/local/superlumic/roles
-# sudo chmod -R g+rwx /usr/local
-# sudo chgrp -R admin /usr/local
+sudo chmod -R g+rwx /usr/local/superlumic
+sudo chgrp -R admin /usr/local/superlumic
 
 if [ -d "/usr/local/superlumic/config" ]; then
     setStatusMessage "Update your config from git"
