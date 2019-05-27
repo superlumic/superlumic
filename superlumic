@@ -104,7 +104,7 @@ setStatusMessage "Create necessary folders"
 sudo mkdir -p /usr/local/superlumic
 sudo mkdir -p /usr/local/superlumic/roles
 # sudo chmod -R g+rwx /usr/local
-sudo chgrp -R admin /usr/local
+# sudo chgrp -R admin /usr/local
 
 if [ -d "/usr/local/superlumic/config" ]; then
     setStatusMessage "Update your config from git"
@@ -126,17 +126,23 @@ setStatusMessage "Create ansible.cfg"
 
 { echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; echo 'deprecation_warnings=False';} > ansible.cfg
 
+setStatusMessage "Checking for encrypted vault files"
+if grep --silent -R "$ANSIBLE_VAULT;.*;AES256" /usr/local/superlumic/config/ ; then
+    echo 'ask_vault_pass=yes' >> ansible.cfg
+    setStatusMessage "Set Ansible to ask for the Vault Password"
+fi
+
 setStatusMessage "Get all the required roles"
 
 ansible-galaxy install -f -r config/requirements.yml -p roles
 
 if [ -f "config/$username.yml" ]; then
     setStatusMessage "Running the ansible playbook for $username"
-    ansible-playbook -i "localhost," config/$username.yml
+    ansible-playbook -i "localhost," config/$username.yml $ANSIBLE_EXTRA_OPTS
 else
     if [ "travis" = "$username" ]; then
         setStatusMessage "Running the ansible playbook for $username but use roderik.yml as fallback"
-        ansible-playbook -i "localhost," config/roderik.yml
+        ansible-playbook -i "localhost," config/roderik.yml $ANSIBLE_EXTRA_OPTS
     else
         triggerError "No playbook for $username found"
     fi
