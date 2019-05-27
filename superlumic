@@ -103,7 +103,7 @@ setStatusMessage "Create necessary folders"
 
 sudo mkdir -p /usr/local/superlumic
 sudo mkdir -p /usr/local/superlumic/roles
-sudo chmod -R g+rwx /usr/local
+# sudo chmod -R g+rwx /usr/local
 sudo chgrp -R admin /usr/local
 
 if [ -d "/usr/local/superlumic/config" ]; then
