@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 BGreen='\e[1;32m'       # Green
 BRed='\e[1;31m'         # Red
