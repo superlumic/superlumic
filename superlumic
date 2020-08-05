@@ -84,8 +84,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 if [[ ! -f "/Library/Developer/CommandLineTools/usr/bin/clang" ]]; then
-    setStatusMessage "Install the CLT"
-    install_clt
+    setStatusMessage "Make sure Xcode or the CommandLineTools are installed!"
 fi
 
 # Install Ansible
