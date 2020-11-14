@@ -53,6 +53,9 @@ function install_clt {
   rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
 }
 
+setStatusMessage "Install the CLT"
+install_clt
+
 setStatusMessage "Keep-alive: update existing sudo time stamp until we are finished"
 
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
@@ -67,14 +70,14 @@ fi
 if ! exists pip; then
     setStatusMessage "Install PIP"
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    python3 get-pip.py --user
+    python get-pip.py --user
     rm -Rf get-pip.py
 fi
 
 # Install Ansible
 if ! exists ansible; then
     setStatusMessage "Install Ansible"
-    pip3 install ansible
+    pip install ansible
 fi
 
 setStatusMessage "Create necessary folders"
