@@ -70,7 +70,7 @@ fi
 if ! exists pip; then
     setStatusMessage "Install PIP"
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    python get-pip.py --user
+    sudo python get-pip.py
     rm -Rf get-pip.py
 fi
 
