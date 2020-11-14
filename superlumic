@@ -66,19 +66,8 @@ if [[ ! -f "/Library/Developer/CommandLineTools/usr/bin/clang" ]]; then
     setStatusMessage "Make sure Xcode or the CommandLineTools are installed!"
 fi
 
-# Install PIP
-if ! exists pip; then
-    setStatusMessage "Install PIP"
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    sudo python get-pip.py
-    rm -Rf get-pip.py
-fi
-
-# Install Ansible
-if ! exists ansible; then
-    setStatusMessage "Install Ansible"
-    sudo ~/Library/Python/2.7/bin/pip install ansible
-fi
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+brew install ansible
 
 setStatusMessage "Create necessary folders"
 
