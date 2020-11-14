@@ -77,7 +77,7 @@ fi
 # Install Ansible
 if ! exists ansible; then
     setStatusMessage "Install Ansible"
-    pip install ansible
+    sudo pip install ansible
 fi
 
 setStatusMessage "Create necessary folders"
