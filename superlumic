@@ -81,6 +81,7 @@ setStatusMessage "Create necessary folders"
 
 sudo mkdir -p /usr/local/superlumic
 sudo mkdir -p /usr/local/superlumic/roles
+sudo mkdir -p /usr/local/superlumic/collections
 sudo chmod -R g+rwx /usr/local/superlumic
 sudo chgrp -R admin /usr/local/superlumic
 
@@ -102,7 +103,7 @@ cd /usr/local/superlumic
 
 setStatusMessage "Create ansible.cfg"
 
-{ echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; echo 'deprecation_warnings=False';} > ansible.cfg
+{ echo '[defaults]'; echo 'roles_path=/usr/local/superlumic/roles:/usr/local/superlumic/config/roles'; echo 'deprecation_warnings=False'; echo 'nocows = True'; echo 'collections_paths = /usr/local/superlumic/collections';} > ansible.cfg
 
 setStatusMessage "Checking for encrypted vault files"
 if grep --silent -R "$ANSIBLE_VAULT;.*;AES256" /usr/local/superlumic/config/ ; then
@@ -112,7 +113,7 @@ fi
 
 setStatusMessage "Get all the required roles"
 
-ansible-galaxy install -f -r config/requirements.yml -p roles
+ansible-galaxy install -f -r config/requirements.yml
 
 if [ -f "config/$username.yml" ]; then
     setStatusMessage "Running the ansible playbook for $username"
