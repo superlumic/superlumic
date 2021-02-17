@@ -79,7 +79,8 @@ sudo chgrp -R admin /usr/local/superlumic
 
 if [ -d "/usr/local/superlumic/config" ]; then
     setStatusMessage "Update your config from git"
-    cd /usr/local/superlumic/config
+    rm -f /usr/local/superlumic/config
+    git clone -q $1 /usr/local/superlumic/config
     git pull -q
 else
     if [ ! -z "$repo" ]; then
